@@ -28,33 +28,32 @@ var detailsPassword = function () {
   var passwordDetails = 
     {
     passwordLength, lowerCaseInc, upperCaseInc, numberInc, specialInc
-    }
-  ;
-
+    };
   return passwordDetails;
 }
+
 // Add event listener to generate button
 generateBtn.addEventListener("click", writePassword);
 
 // Write password to the #password input
 function writePassword() {
   var password = generatePassword(detailsPassword());
-  // var password = generatePassword(128,false,false,true,false);
-
+  console.log(password);
   var passwordText = document.querySelector("#password");
-
   passwordText.value = password;
 }
 
+// random number generator function
 var randomNumber = function(min, max){
   // if we have a string of length 10, with indexes 0-9, then argument of (0,10) here
   // will only ever yield a maximum of 9, and a minimum of 0, which is what we want.
   return Math.floor((Math.random()*(max-min)) +min);
 }
 
-// length, lowerInc, upperInc, numInc, symbolInc
+// generate password 
 var generatePassword = function (passwordObj) {
   const { passwordLength, lowerCaseInc, upperCaseInc, numberInc, specialInc } = passwordObj;
+  console.log(passwordLength);
   // destructuring
   // passwordLength: pwdLength
  // console.log(passwordObj.passwordLength);
@@ -69,7 +68,7 @@ var generatePassword = function (passwordObj) {
     randomIndex = randomNumber(0, lowerCaseString.length);
     minimumPassword+=lowerCaseString[randomIndex];
   }
-  if(lowerCaseInc){
+  if(upperCaseInc){
     allOptionsString+=upperCaseString;
     randomIndex = randomNumber(0, upperCaseString.length);
     minimumPassword+=upperCaseString[randomIndex];
@@ -84,11 +83,12 @@ var generatePassword = function (passwordObj) {
     randomIndex = randomNumber(0, symbolString.length);
     minimumPassword+=symbolString[randomIndex];
   }
-
+  console.log(minimumPassword);
   while(minimumPassword.length<passwordLength){
     randomIndex=randomNumber(0, allOptionsString.length);
     minimumPassword+=allOptionsString[randomIndex];
   }
+  console.log(minimumPassword);
   // can either shuffle the entire password, randomly indexing and moving around
   // or else can switch spots within password only as many times as minPwLength -- THIS DID NOT WORK BECAUSE U CAN'T REPLACE AN INDEX 
 
@@ -103,13 +103,13 @@ var generatePassword = function (passwordObj) {
   //   console.log(minimumPassword);
   //   console.log("done" +i);
   // }
-  while(finalPassword.length<length){
+  while(finalPassword.length<passwordLength){
     randomIndex=randomNumber(0, minimumPassword.length);
     var minRandomIndex=minimumPassword[randomIndex];
     finalPassword=finalPassword+minRandomIndex;
     minimumPassword=minimumPassword.slice(0, randomIndex)+minimumPassword.slice(randomIndex+1);
   }
-
+  console.log(finalPassword);
 
   // whole array with every string option in it, length 4 maximum
   // you for loop through it for length of password you want

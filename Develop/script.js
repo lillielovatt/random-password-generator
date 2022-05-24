@@ -5,13 +5,14 @@ var lowerCaseString = "abcdefghijklmnopqrstuvwxyz";
 var upperCaseString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 var numberString = "0123456789";
 var symbolString = "@#$%!&*?.";
-var passwordLength = "";
+var passwordLength = null;
+// use null, not "" because it is a number
 
 var detailsPassword = function () {
   if (!passwordLength) {
     var passwordLength = prompt("How long do you want your password to be? Choose a number between 8 and 128.");
     if (isNaN(parseInt(passwordLength)) || passwordLength < 8 || passwordLength > 128) {
-      passwordLength = "";
+      passwordLength = null;
       alert("You need to choose a number between 8 and 128. Try again.");
       detailsPassword();
     }
@@ -22,9 +23,14 @@ var detailsPassword = function () {
   var specialInc = confirm("Do you want special symbols?");
   if (!lowerCaseInc && !upperCaseInc && !numberInc && !specialInc) {
     alert("You must choose to include at least one of the following: lower case letters, upper case letters, numbers, or special symbols. Try again.");
-    detailsPassword;
+    detailsPassword();
   }
-  var passwordDetails = [passwordLength, lowerCaseInc, upperCaseInc, numberInc, specialInc];
+  var passwordDetails = 
+    {
+    passwordLength, lowerCaseInc, upperCaseInc, numberInc, specialInc
+    }
+  ;
+
   return passwordDetails;
 }
 // Add event listener to generate button
@@ -32,8 +38,8 @@ generateBtn.addEventListener("click", writePassword);
 
 // Write password to the #password input
 function writePassword() {
-  // var password = generatePassword(detailsPassword());
-  var password = generatePassword(128,false,false,true,false);
+  var password = generatePassword(detailsPassword());
+  // var password = generatePassword(128,false,false,true,false);
 
   var passwordText = document.querySelector("#password");
 
@@ -46,38 +52,40 @@ var randomNumber = function(min, max){
   return Math.floor((Math.random()*(max-min)) +min);
 }
 
+// length, lowerInc, upperInc, numInc, symbolInc
+var generatePassword = function (passwordObj) {
+  const { passwordLength, lowerCaseInc, upperCaseInc, numberInc, specialInc } = passwordObj;
+  // destructuring
+  // passwordLength: pwdLength
+ // console.log(passwordObj.passwordLength);
 
-var generatePassword = function (length, lowerInc, upperInc, numInc, symbolInc) {
-  // console.log("line 46")
-  // console.log(lowerInc);
-  // console.log(typeof(lowerInc));
   var allOptionsString = "";
   var minimumPassword = "";
   var finalPassword="";
-  var randomIndex=0; 
-  // can I declare without initializing?
-  if(lowerInc){
+  var randomIndex; 
+  //  I can declare without initializing!
+  if(lowerCaseInc){
     allOptionsString+=lowerCaseString;
     randomIndex = randomNumber(0, lowerCaseString.length);
     minimumPassword+=lowerCaseString[randomIndex];
   }
-  if(upperInc){
+  if(lowerCaseInc){
     allOptionsString+=upperCaseString;
     randomIndex = randomNumber(0, upperCaseString.length);
     minimumPassword+=upperCaseString[randomIndex];
   }
-  if(numInc){
+  if(numberInc){
     allOptionsString+=numberString;
     randomIndex = randomNumber(0, numberString.length);
     minimumPassword+=numberString[randomIndex];
   }
-  if(symbolInc){
+  if(specialInc){
     allOptionsString+=symbolString;
     randomIndex = randomNumber(0, symbolString.length);
     minimumPassword+=symbolString[randomIndex];
   }
 
-  while(minimumPassword.length<length){
+  while(minimumPassword.length<passwordLength){
     randomIndex=randomNumber(0, allOptionsString.length);
     minimumPassword+=allOptionsString[randomIndex];
   }
@@ -95,13 +103,20 @@ var generatePassword = function (length, lowerInc, upperInc, numInc, symbolInc) 
   //   console.log(minimumPassword);
   //   console.log("done" +i);
   // }
-
   while(finalPassword.length<length){
     randomIndex=randomNumber(0, minimumPassword.length);
     var minRandomIndex=minimumPassword[randomIndex];
     finalPassword=finalPassword+minRandomIndex;
     minimumPassword=minimumPassword.slice(0, randomIndex)+minimumPassword.slice(randomIndex+1);
   }
+
+
+  // whole array with every string option in it, length 4 maximum
+  // you for loop through it for length of password you want
+  // you index into random array 0123, then randomindex inside of that
+  // remove that array position 0123
+  // do it all again
+  // once that array is empty, you refill it. 
 
   return finalPassword;
 }

@@ -2,6 +2,9 @@
 By: Lillie Lovatt
 Date: 5/25/2022
 
+REPO CODE URL: https://github.com/lillielovatt/random-password-generator
+GITHUB PAGE URL: https://lillielovatt.github.io/random-password-generator/
+
 
 An application that generates a random password based on user-selected criteria. The app runs in the browser and features dynamically updated HTML and CSS powered by your JavaScript code. It has a clean and polished user interface and is responsive, which ensures that it adapts to multiple screen sizes.
 
